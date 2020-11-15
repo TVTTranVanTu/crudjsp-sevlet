@@ -17,11 +17,12 @@ public class UserDao {
 	private String jdbcPassword = "";
 	
 	
-	private static final String INSERT_USERS_SQL = "INSERT INTO users" + " (name,email,country) VALUES" + " (?,?,?);";
-	private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where id=?";
+	private static final String INSERT_USERS_SQL = "INSERT INTO users" + " (name,email,country,isadmin) VALUES" + " (?,?,?,?);";
+	private static final String SELECT_USER_BY_ID = "select id,name,email,country,isadmin from users where id=?";
 	private static final String SELECT_ALL_USERS = "select * from users";
+	private static final String SELECT_ALL_CUSTOMERS = "select * from users where isadmin =0";
 	private static final String DELETE_USERS_SQL = "delete from users where id = ?;";
-	private static final String UPDATE_USERS_SQL = "update users set name=?,email=?,country=? where id=?;";
+	private static final String UPDATE_USERS_SQL = "update users set name=?,email=?,country=?,isadmin=? where id=?;";
 
 	protected Connection getConnection() {
 		Connection connection = null;
@@ -45,6 +46,7 @@ public class UserDao {
 			preparedStatement.setString(1, user.getName());
 			preparedStatement.setString(2, user.getEmail());
 			preparedStatement.setString(3, user.getCountry());
+			preparedStatement.setInt(4, user.getIsadmin());
 			preparedStatement.executeUpdate();
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -59,7 +61,8 @@ public class UserDao {
 			statement.setString(1, user.getName());
 			statement.setString(2, user.getEmail());
 			statement.setString(3, user.getCountry());
-			statement.setInt(4, user.getId());;
+			statement.setInt(4, user.getIsadmin());
+			statement.setInt(5, user.getId());
 			
 			rowUpdated = statement.executeUpdate() >0 ;
 		}
@@ -79,7 +82,8 @@ public class UserDao {
 				String name = rs.getString("name");
 				String email = rs.getString("email");
 				String country = rs.getString("country");
-				user = new User(id,name,email,country);
+				int isadmin = rs.getInt("isadmin");
+				user = new User(id,name,email,country,isadmin);
 			}
 			
 		}catch(SQLException e) {
@@ -101,7 +105,8 @@ public class UserDao {
 				String name = rs.getString("name");
 				String email = rs.getString("email");
 				String country = rs.getString("country");
-				users.add(new User(id,name, email, country));
+				int isadmin = rs.getInt("isadmin");
+				users.add(new User(id,name, email, country,isadmin));
 			}
 			
 		}catch(SQLException e) {
@@ -111,6 +116,30 @@ public class UserDao {
 
 	}
 	
+	//select customer
+	
+	public List<User> selectAllCustomers() {
+		List<User> users = new ArrayList<>();
+		try(Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMERS);){
+			System.out.println(preparedStatement);
+			
+			ResultSet rs =  preparedStatement.executeQuery();
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				String email = rs.getString("email");
+				String country = rs.getString("country");
+				int isadmin = rs.getInt("isadmin");
+				users.add(new User(id,name, email, country,isadmin));
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return users;
+
+	}
 	//delete user
 	
 	public boolean deleteUser(int id) throws SQLException {

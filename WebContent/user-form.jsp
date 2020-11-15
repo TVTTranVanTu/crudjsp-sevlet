@@ -68,6 +68,11 @@
 						value="<c:out value='${user.country}' />" class="form-control"
 						name="country">
 				</fieldset>
+				<fieldset class="form-group">
+					<label>User IsAdmin</label> <input type="text"
+						value="<c:out value='${user.isadmin}' />" class="form-control"
+						name="isadmin">
+				</fieldset>
 
 				<button type="submit" class="btn btn-success">Save</button>
 				</form>

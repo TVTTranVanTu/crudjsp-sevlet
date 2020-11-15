@@ -21,7 +21,7 @@
 
 			<ul class="navbar-nav">
 				<li><a href="<%=request.getContextPath()%>/customer"
-					class="nav-link">Customer</a></li>
+					class="nav-link">customer</a></li>
 			</ul>
 		</nav>
 	</header>
@@ -31,13 +31,8 @@
 		
 
 		<div class="container">
-			<h3 class="text-center">List Users</h3>
+			<h3 class="text-center">List Customers</h3>
 			<hr>
-			<div class="container text-left">
-
-				<a href="<%=request.getContextPath()%>/new" class="btn btn-success">Add
-					New User</a>
-			</div>
 			<br>
 			<table class="table table-bordered">
 				<thead>
@@ -46,8 +41,6 @@
 						<th>Name</th>
 						<th>Email</th>
 						<th>Country</th>
-						<th>IsAdmin</th>
-						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -59,10 +52,6 @@
 							<td><c:out value="${user.name}" /></td>
 							<td><c:out value="${user.email}" /></td>
 							<td><c:out value="${user.country}" /></td>
-							<td><c:out value="${user.isadmin}" /></td>
-							<td><a href="edit?id=<c:out value='${user.id}' />">Edit</a>
-								&nbsp;&nbsp;&nbsp;&nbsp; <a
-								href="delete?id=<c:out value='${user.id}' />">Delete</a></td>
 						</tr>
 					</c:forEach>
 					<!-- } -->

@@ -46,6 +46,20 @@ public class UserSevlet extends HttpServlet {
 		String action = request.getServletPath();
 		
 		switch (action) {
+		case "/customer":
+			try {
+				listCustomer(request, response);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ServletException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			break;
 		case "/new": 
 			showNewForm(request, response);
 			break;
@@ -117,13 +131,20 @@ public class UserSevlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 	
+	private void listCustomer(HttpServletRequest request,HttpServletResponse response) throws SQLException,ServletException,IOException{
+		List<User> listUser = userDao.selectAllCustomers();
+		request.setAttribute("listUser", listUser);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer.jsp");
+		dispatcher.forward(request, response);
+	}
+	
 	private void updateUser(HttpServletRequest request,HttpServletResponse response) throws SQLException,IOException{
 		int id = Integer.parseInt(request.getParameter("id"));
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String country = request.getParameter("country");
-		
-		User user = new User(id,name, email, country);
+		int isadmin = Integer.parseInt(request.getParameter("isadmin"));
+		User user = new User(id,name, email, country,isadmin);
 		userDao.updateUser(user);
 		response.sendRedirect("list");
 	}
@@ -151,7 +172,8 @@ public class UserSevlet extends HttpServlet {
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String country = request.getParameter("country");
-		User newUser = new User(name,email,country);
+		int isadmin = Integer.parseInt(request.getParameter("isadmin"));
+		User newUser = new User(name,email,country,isadmin);
 		userDao.insertUser(newUser);
 		response.sendRedirect("list");
 	}
